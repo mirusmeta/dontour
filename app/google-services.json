@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "635373268255",
+    "project_id": "qweqwe-3fae2",
+    "storage_bucket": "qweqwe-3fae2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635373268255:android:0a640d63404be2000ed42a",
+        "android_client_info": {
+          "package_name": "ru.dontour"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByIC424vnneJ7mkPHmD9SrqgPaYJvCWcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

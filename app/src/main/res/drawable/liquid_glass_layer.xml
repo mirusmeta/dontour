@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Тень -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="100dp"/>
+            <gradient
+                android:startColor="#22000000"
+                android:endColor="@android:color/transparent"
+                android:angle="90" />
+        </shape>
+    </item>
+
+    <!-- Основное стекло -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#55FFFFFF"/>
+            <stroke android:width="2dp" android:color="#B3FFFFFF"/>
+            <corners android:radius="100dp" />
+        </shape>
+    </item>
+
+    <!-- Подсветка сверху -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="100dp" />
+            <gradient
+                android:startColor="#80FFFFFF"
+                android:endColor="@android:color/transparent"
+                android:angle="270" />
+        </shape>
+    </item>
+</layer-list>

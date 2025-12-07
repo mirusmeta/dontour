@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/backgroundPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainPage">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_block"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginBottom="20dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:background="@drawable/main_menu_faded"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/chosen_glass"
+            android:layout_width="76dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/liquid_glass_layer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/home_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/home_icon"
+            app:layout_constraintStart_toStartOf="@id/chosen_glass"
+            app:layout_constraintEnd_toEndOf="@id/chosen_glass"
+            app:layout_constraintTop_toTopOf="@id/chosen_glass"
+            app:layout_constraintBottom_toBottomOf="@id/chosen_glass"/>
+
+        <ImageView
+            android:layout_marginEnd="30dp"
+            android:id="@+id/map_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/map_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginEnd="26dp"
+        android:id="@+id/search_block"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/main_menu_faded"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/ai_map"
+            android:layout_width="28dp"
+            android:layout_height="28dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.cardview.widget.CardView
+        android:visibility="gone"
+        android:id="@+id/closeIcon"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/landmarkInfoBlock"
+        app:layout_constraintEnd_toEndOf="@+id/landmarkInfoBlock">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/blue_crossbar"
+                android:layout_width="22dp"
+                android:layout_height="22dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="26dp"
+        android:id="@+id/landmarkInfoBlock"
+        android:layout_width="match_parent"
+        android:background="@drawable/card_bg_rounded"
+        app:cardElevation="4dp"
+        android:layout_height="330dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="32dp"
+            android:id="@+id/containerImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_height="160dp">
+            <ImageView
+                android:id="@+id/imageOfLandMark"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/nameOfLandmark"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:fontFamily="@font/sfpro"
+            android:gravity="center"
+            android:textFontWeight="600"
+            android:textSize="19dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Ростовский государственный музыкальный театр"
+            app:layout_constraintEnd_toEndOf="@+id/containerImage"
+            app:layout_constraintStart_toStartOf="@+id/containerImage"
+            app:layout_constraintTop_toBottomOf="@+id/containerImage" />
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonModeInf"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/main_menu_faded"
+            android:layout_height="46dp">
+            <TextView
+                android:textSize="16dp"
+                android:fontFamily="@font/sfpro"
+                android:textFontWeight="600"
+                android:gravity="center"
+                android:text="Узнать подробнее"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

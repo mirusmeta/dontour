@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:id="@+id/container"
+    android:background="@drawable/resource_bg"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginStart="16dp"
+    android:layout_height="106dp">
+
+    <ImageView
+        android:layout_marginTop="14dp"
+        android:id="@+id/itemImage"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/logo_bataysk"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_marginTop="2dp"
+        android:textSize="16dp"
+        android:paddingHorizontal="30dp"
+        android:textFontWeight="600"
+        android:fontFamily="@font/sfpro"
+        android:id="@+id/itemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Батайск"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemImage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ДонTour</string>
+    <string name="welcome_1">Добро пожаловать в</string>
+    <string name="easy_plan">Легко планируй</string>
+    <string name="first_text">Создавай маршруты быстро и просто,\nбез лишних настроек.</string>
+    <string name="second_text">Открывай уникальные места</string>
+    <string name="third_text">Получай советы от ИИ по построению маршрута</string>
+    <string name="question_text">Что вам больше\nпо душе?</string>
+    <string name="parks">Парки</string>
+    <string name="memorials">Памятники</string>
+    <string name="events">Мероприятия</string>
+    <string name="allinone">Все сразу</string>
+    <string name="label_pro_subscrive">Подписка PRO</string>
+    <string name="label_get_subscribe">Оформи подписку, и получи еще\nбольше возможностей!</string>
+    <string name="landmarks">Достопримечательности</string>
+    <string name="update_to_pro">Обновись до PRO</string>
+    <string name="ask_ai">Спросите ИИ...</string>
+    <string name="text_try">Путешествуй с уверенностью</string>
+    <string name="text_try_second">Советы для комфортного и безопасного\nпутешествия всегда под рукой.</string>
+    <string name="text_go">Далее — время собирать чемоданы!</string>
+    <string name="text_start">Начнем</string>
+    <string name="text_choose">Выбрать</string>
+    <string name="map_of_wifi_hospots">Карта Wi-Fi точек</string>
+    <string name="text_lets_go">Поехали</string>
+    <string name="text_what_in_rnd">Что посмотреть в столице Юга?</string>
+    <string name="text_show_and_tell">Расскажем и покажем вместе с умными маршрутами</string>
+    <string name="text_choose_city">Выберите город</string>
+    <string name="text_find_all">Найдется все</string>
+    <string name="gen_route">Сгенерировать маршрут</string>
+    <string name="regen_route">Сгенерировать заново</string>
+    <string name="ai_memmory">Память ИИ-помощника</string>
+    <string name="rec_text">Рекомендации на основе действий</string>
+    <string name="smart_routes">Маршруты с ИИ +</string>
+    <string name="no_network">Работа без интернета</string>
+    <string name="free_wifi">Карта бесплатных точек Wi-Fi</string>
+    <string name="money">149.90 ₽ / месяц</string>
+    <string name="languagetoanswer">Русский</string>
+    <string name="notfound">Не найдено</string>
+    <string name="error">Ошибка</string>
+    <string name="more">Узнать подробнее</string>
+
+    <!-- City Names -->
+    <string name="rostov">Ростов-на-Дону</string>
+    <string name="azov">Азов</string>
+    <string name="bataysk">Батайск</string>
+    <string name="taganrog">Таганрог</string>
+    <string name="novocherkassk">Новочеркасск</string>
+    <string name="volgodonsk">Волгодонск</string>
+    <string name="tsimlyansk">Цимлянск</string>
+    <string name="semikarakorsk">Семикаракорск</string>
+    <string name="novoshakhtinsk">Новошахтинск</string>
+    <string name="starocherkasskaya">Старочеркасская</string>
+    <string name="shakhty">Шахты</string>
+</resources>

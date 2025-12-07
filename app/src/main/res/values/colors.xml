@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="lightChosen">#91C2FF</color>
+    <color name="backgroundPrimary">#F8F8FF</color>
+    <color name="primaryBlue">#135ABC</color>
+    <color name="secondaryBlue">#0044A2</color>
+    <color name="lightBlue">#DAEAFF</color>
+    <color name="lightBlueTransparent">#E6DAEAFF</color>
+
+    <color name="lightGreen">#BDFFC6</color>
+    <color name="lightOrange">#FFDEBD</color>
+    <color name="lightRed">#FFBDE5</color>
+</resources>

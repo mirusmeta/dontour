@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">DonTour</string>
+    <string name="welcome_1">Welcome to</string>
+    <string name="easy_plan">Plan easily</string>
+    <string name="first_text">Create routes quickly and easily,\nwithout unnecessary settings.</string>
+    <string name="second_text">Discover unique places</string>
+    <string name="third_text">Get tips and find secrets\nlocations from locals.</string>
+    <string name="question_text">What do you\nlike more?</string>
+    <string name="parks">Parks</string>
+    <string name="memorials">Monuments</string>
+    <string name="events">Events</string>
+    <string name="allinone">All at once</string>
+    <string name="label_pro_subscrive">PRO subscription</string>
+    <string name="label_get_subscribe">Subscribe and get more\neven more features!</string>
+    <string name="landmarks">Attractions</string>
+    <string name="update_to_pro">Upgrade to PRO</string>
+    <string name="ask_ai">Ask the AI...</string>
+    <string name="text_try">Travel with confidence</string>
+    <string name="text_try_second">Tips for a comfortable and safe\ntravel is always at hand.</string>
+    <string name="text_go">Next, it\'s time to pack your bags!</string>
+    <string name="text_start">Let\'s begin</string>
+    <string name="text_choose">Choose</string>
+    <string name="map_of_wifi_hospots">Wi-Fi hotspot map</string>
+    <string name="text_lets_go">Let\'s begin</string>
+    <string name="text_what_in_rnd">What to see in the capital of the South?</string>
+    <string name="text_show_and_tell">We\'ll tell you and show you with smart routes</string>
+    <string name="text_choose_city">Select a city</string>
+    <string name="text_find_all">Everything can be found</string>
+    <string name="gen_route">Generate a route</string>
+    <string name="regen_route">Generate again</string>
+    <string name="ai_memmory">AI Assistant Memory</string>
+    <string name="rec_text">Action-based recommendations</string>
+    <string name="smart_routes">AI-powered routes +</string>
+    <string name="no_network">Work without the Internet</string>
+    <string name="free_wifi">Free Wi-Fi hotspot map</string>
+    <string name="money">4.90 $/month</string>
+    <string name="languagetoanswer">English</string>
+    <string name="notfound">Not Found</string>
+    <string name="error">Error</string>
+    <string name="more">Find out more</string>
+
+    <!-- City Names -->
+    <string name="rostov">Rostov</string>
+    <string name="azov">Azov</string>
+    <string name="bataysk">Bataysk</string>
+    <string name="taganrog">Taganrog</string>
+    <string name="novocherkassk">Novocherkassk</string>
+    <string name="volgodonsk">Volgodonsk</string>
+    <string name="tsimlyansk">Tsimlyansk</string>
+    <string name="semikarakorsk">Semikarakorsk</string>
+    <string name="novoshakhtinsk">Novoshakhtinsk</string>
+    <string name="starocherkasskaya">Starocherkasskaya</string>
+    <string name="shakhty">Shakhty</string>
+
+
+</resources>
