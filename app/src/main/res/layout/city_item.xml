@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:id="@+id/container"
-    android:background="@drawable/resource_bg"
+    android:background="@drawable/resource_bg_selected"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="20dp"
-    android:layout_marginStart="16dp"
+    android:layout_marginStart="26dp"
     android:layout_height="106dp">
 
     <ImageView
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:text="Батайск"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemImage" />

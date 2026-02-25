@@ -47,7 +47,7 @@
 
 # Сохраняем модели данных (если используешь Gson/Retrofit)
 # Можно указать свой пакет с моделями:
--keep class ru.dontour.model.** { *; }
+-keep class ru.rostov.model.** { *; }
 
 ##############################
 # Picasso

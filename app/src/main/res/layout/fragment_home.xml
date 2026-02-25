@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundPrimary"
+    android:background="@drawable/main_back"
     android:fillViewport="true"
     tools:context=".HomeFragment">
 
@@ -12,56 +12,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/ambitient_rectangle"
-            app:layout_constraintEnd_toEndOf="parent"
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="84dp"
+            android:fontFamily="@font/sfpro"
+            android:text="Доступный"
+            android:textColor="@color/white"
+            android:textFontWeight="800"
+            android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/wifi_b"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="26dp"
-            android:background="@drawable/resource_bg"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="46dp"
+            app:cardBackgroundColor="@color/main"
+            app:cardCornerRadius="10dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/label"
+            app:layout_constraintStart_toEndOf="@+id/label"
+            app:layout_constraintTop_toTopOf="@+id/label">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sfpro"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/map_of_wifi_hospots"
-                android:textColor="@color/black"
+                android:text="Ростов"
+                android:paddingHorizontal="10dp"
+                android:textColor="@color/white"
                 android:textFontWeight="800"
-                android:textSize="18dp"
-                android:layout_marginTop="2dp"
+                android:textSize="30sp"
+                android:layout_marginTop="-5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="84dp"
-            android:layout_marginStart="26dp"
-            android:fontFamily="@font/sfpro"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textFontWeight="800"
-            android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/subtitile"
@@ -70,8 +60,8 @@
             android:layout_marginStart="44dp"
             android:layout_marginTop="-2dp"
             android:fontFamily="@font/sfpro"
-            android:text="@string/text_lets_go"
-            android:textColor="@color/black"
+            android:text="Поехали"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/label" />
@@ -97,8 +87,8 @@
                 android:layout_marginEnd="120dp"
                 android:layout_marginBottom="40dp"
                 android:fontFamily="@font/sfpro"
-                android:text="@string/text_what_in_rnd"
-                android:textColor="@color/black"
+                android:text="Куда можно без барьеров?"
+                android:textColor="@color/white"
                 android:textFontWeight="600"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,8 +102,8 @@
                 android:layout_marginBottom="12dp"
                 android:layout_marginEnd="120dp"
                 android:fontFamily="@font/sfpro"
-                android:text="@string/text_show_and_tell"
-                android:textColor="@color/black"
+                android:text="Найдём доступные места и маршруты по Ростовской области"
+                android:textColor="@color/white"
                 android:textFontWeight="100"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -126,7 +116,7 @@
                 android:scaleX="0.7"
                 android:scaleY="0.7"
                 android:layout_marginEnd="6dp"
-                android:src="@drawable/rostov_logo"
+                android:src="@drawable/icon_disabled_person"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -139,17 +129,16 @@
             android:layout_marginStart="44dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/sfpro"
-            android:text="@string/text_choose_city"
-            android:textColor="@color/black"
+            android:text="Города"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/main_banner" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/city_recycler"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="114dp"
-            android:layout_marginStart="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:nestedScrollingEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -163,6 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="30dp"
+            app:cardBackgroundColor="@color/back_white"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintTop_toBottomOf="@+id/city_recycler"
@@ -178,10 +168,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
-                    android:paddingEnd="20dp"
-                    android:text="Интересные места"
-                    android:textColor="@color/black"
+                    android:paddingEnd="110dp"
+                    android:paddingStart="20dp"
+                    android:text="Доступные места"
+                    android:textColor="@color/white"
                     android:textFontWeight="600"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -193,10 +183,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
-                    android:paddingEnd="20dp"
-                    android:text="Посмотрите все достопримечательности, при желании отобразив их на карте"
-                    android:textColor="@color/black"
+                    android:paddingEnd="110dp"
+                    android:paddingStart="20dp"
+                    android:text="Все заведения с проверенной доступностью (кафе, медицина, услуги)"
+                    android:textColor="@color/white"
                     android:textFontWeight="100"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -207,11 +197,11 @@
                 <ImageView
                     android:layout_width="78dp"
                     android:layout_height="78dp"
-                    android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/interesting_places"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/icon_map_point"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -227,6 +217,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            app:cardBackgroundColor="@color/back_white"
             app:layout_constraintTop_toBottomOf="@+id/b_places"
             tools:layout_editor_absoluteX="20dp">
 
@@ -240,10 +231,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
+                    android:paddingStart="130dp"
                     android:paddingEnd="20dp"
                     android:text="Где остановиться?"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textFontWeight="600"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -255,10 +246,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
+                    android:paddingStart="130dp"
                     android:paddingEnd="20dp"
                     android:text="Здесь вы найдете лучшие варианты жилья с отзывами и фото"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textFontWeight="100"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -269,133 +260,8 @@
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/oteli"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/b_eda"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/b_oteli"
-            tools:layout_editor_absoluteX="20dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
-                    android:paddingEnd="20dp"
-                    android:text="Проголодались?"
-                    android:textColor="@color/black"
-                    android:textFontWeight="600"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
-                    android:paddingEnd="20dp"
-                    android:text="Закажите еду прямо в отель с бесплатной доставкой!"
-                    android:textColor="@color/black"
-                    android:textFontWeight="100"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-                <ImageView
-                    android:layout_width="78dp"
-                    android:layout_height="78dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/eda"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/b_afisha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/b_eda"
-            tools:layout_editor_absoluteX="20dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textView45"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
-                    android:paddingEnd="20dp"
-                    android:text="Культурный отдых"
-                    android:textColor="@color/black"
-                    android:textFontWeight="600"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:fontFamily="@font/sfpro"
-                    android:paddingStart="110dp"
-                    android:paddingEnd="20dp"
-                    android:text="Посмотрите все мероприятия рядом с вами, и выберите по вкусу!"
-                    android:textColor="@color/black"
-                    android:textFontWeight="100"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView45" />
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/afisha"
+                    android:layout_marginStart="30dp"
+                    android:src="@drawable/icon_route"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

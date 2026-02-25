@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "ru.dontour"
+    namespace = "ru.rostov"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "ru.dontour"
+        applicationId = "ru.rostov"
         minSdk = 27
         targetSdk = 36
         versionCode = 2
@@ -20,9 +20,9 @@ android {
         addManifestPlaceholders(
             mapOf(
                 "VKIDRedirectHost" to "vk.com",
-                "VKIDRedirectScheme" to "vk54268162",
-                "VKIDClientID" to "54268162",
-                "VKIDClientSecret" to "P49ngb1OPkT6snaeEzVP"
+                "VKIDRedirectScheme" to "vk54463682",
+                "VKIDClientID" to "54463682",
+                "VKIDClientSecret" to "gnTFr4sMcfNEbdg8veDu"
             )
         )
     }
