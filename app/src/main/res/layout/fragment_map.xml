@@ -152,6 +152,7 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout10"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout9">
 
+
         <ImageView
             android:id="@+id/logo_city"
             android:layout_width="26dp"
