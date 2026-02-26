@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!VKIDHelper.isInitialized) {
-            VKID.init(this)
+            VKID.init(this@MainActivity)
             VKIDHelper.isInitialized = true
         }
         var sPref = getSharedPreferences("data", MODE_PRIVATE)
@@ -29,13 +30,12 @@ class MainActivity : AppCompatActivity() {
         if (canGo){
             startActivity(Intent(this@MainActivity, MainPage::class.java))
         }
-        animateMain()
         setupEdgeToEdge()
         next()
     }
 
     private fun next() {
-        val buttonNext = findViewById<View>(R.id.button_next)
+        val buttonNext = findViewById<LinearLayout>(R.id.linearLayout2)
         val root = findViewById<View>(R.id.main)
         buttonNext.setOnClickListener {
             val vkidOneTapBottomSheet =
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                         .setDuration(400)
                         .setInterpolator(android.view.animation.AccelerateDecelerateInterpolator())
                         .withEndAction {
-                            val intent = Intent(this, Preferences::class.java)
+                            val intent = Intent(this, MainPage::class.java)
                             startActivity(intent)
                             finish()
                         }
@@ -59,95 +59,6 @@ class MainActivity : AppCompatActivity() {
 
             vkidOneTapBottomSheet.show()
         }
-    }
-
-    private fun animateMain() {
-        setContentView(R.layout.activity_main)
-        val textWelcome = findViewById<TextView>(R.id.text_welcome)
-        val textWelcomeMain = findViewById<TextView>(R.id.text_welcome_main)
-        val firstContr = findViewById<View>(R.id.first_contr)
-        val secondContr = findViewById<View>(R.id.second_contr)
-        val thirdConstr = findViewById<View>(R.id.third_constr)
-        val additional_text = findViewById<TextView>(R.id.additional_text)
-        val additional_icon = findViewById<ImageView>(R.id.additional_icon)
-        val root = findViewById<View>(R.id.main)
-        val buttonNext = findViewById<View>(R.id.button_next)
-
-
-        val allViews = listOf(
-            textWelcome,
-            textWelcomeMain,
-            firstContr,
-            secondContr,
-            thirdConstr,
-            additional_text,
-            additional_icon,
-            buttonNext
-        )
-
-        allViews.forEach {
-            it.alpha = 0f
-        }
-        listOf(firstContr, secondContr, thirdConstr, additional_icon, additional_text, buttonNext).forEach {
-            it.translationY = 100f
-        }
-        textWelcome.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setDuration(600)
-            .setInterpolator(android.view.animation.OvershootInterpolator(1.2f))
-            .start()
-
-        textWelcomeMain.postDelayed({
-            textWelcomeMain.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(600)
-                .setInterpolator(android.view.animation.OvershootInterpolator(1.2f))
-                .start()
-        }, 200)
-        val blocks = listOf(firstContr, secondContr, thirdConstr)
-        blocks.forEachIndexed { index, block ->
-            block.postDelayed({
-                block.animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(700)
-                    .setInterpolator(android.view.animation.OvershootInterpolator(1.2f))
-                    .start()
-            }, (index * 200 + 400).toLong())
-        }
-        additional_icon.postDelayed({
-            additional_icon.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(500)
-                .setInterpolator(android.view.animation.DecelerateInterpolator())
-                .start()
-        }, 1100)
-        additional_text.postDelayed({
-            additional_text.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(500)
-                .setInterpolator(android.view.animation.DecelerateInterpolator())
-                .start()
-        }, 1100)
-        buttonNext.postDelayed({
-            buttonNext.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setDuration(600)
-                .setInterpolator(android.view.animation.OvershootInterpolator(1.5f))
-                .withEndAction {
-                    buttonNext.animate()
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .setDuration(200)
-                        .start()
-                }
-                .start()
-        }, 1300)
     }
 
     private fun setupEdgeToEdge() {
