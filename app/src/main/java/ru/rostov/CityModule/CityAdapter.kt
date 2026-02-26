@@ -30,34 +30,32 @@ class CityAdapter(
         val item = items[position]
         val context = holder.itemView.context
 
-        holder.apply {
-            title.text = item.title
-            image.setImageResource(item.imageResId)
+        holder.title.text = item.title
+        holder.image.setImageResource(item.imageResId)
 
-            root.setBackgroundResource(
-                if (item.isSelected) R.drawable.resource_bg_selected
-                else R.drawable.resource_bg
-            )
+        holder.root.setBackgroundResource(
+            if (item.isSelected) R.drawable.resource_bg_selected
+            else R.drawable.resource_bg
+        )
 
-            itemView.setOnClickListener {
-                if (!item.isSelected) {
-                    val previousIndex = items.indexOfFirst { it.isSelected }
-                    items.forEach { it.isSelected = false }
-                    item.isSelected = true
+        holder.itemView.setOnClickListener {
+            if (!item.isSelected) {
 
-                    val anim = AnimationUtils.loadAnimation(context, R.anim.select_animation)
-                    holder.root.startAnimation(anim)
+                val previousIndex = items.indexOfFirst { it.isSelected }
 
-                    if (previousIndex != -1) notifyItemChanged(previousIndex)
-                    notifyItemChanged(position)
+                items.forEach { it.isSelected = false }
+                item.isSelected = true
 
-                    onItemClick(item)
-                }
+                if (previousIndex != -1) notifyItemChanged(previousIndex)
+                notifyItemChanged(position)
+
+                val anim = AnimationUtils.loadAnimation(context, R.anim.select_animation)
+                holder.root.startAnimation(anim)
+
+                onItemClick(item)
             }
         }
     }
 
     override fun getItemCount(): Int = items.size
-
 }
-

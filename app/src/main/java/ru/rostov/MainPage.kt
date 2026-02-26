@@ -179,4 +179,8 @@ class MainPage : AppCompatActivity() {
             insets
         }
     }
+    fun openMapTab() {
+        val icons = listOf(homeIcon, mapIcon, menuIcon, profileIcon)
+        selectTab(1, icons)   // 1 = MapFragment
+    }
 }
