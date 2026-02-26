@@ -112,4 +112,14 @@
 
     </LinearLayout>
 
+    <com.vk.id.onetap.xml.OneTapBottomSheet
+        android:id="@+id/vkid_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:vkid_bottomSheetServiceName="@string/app_name"
+        app:vkid_bottomSheetScenario="EnterToAccount"
+        app:vkid_autoHideOnSuccess="false"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
