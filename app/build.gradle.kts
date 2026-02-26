@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 android {
@@ -78,7 +79,17 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.apache.poi:poi-ooxml:5.2.5")
 
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
 
+// Основной SDK Supabase
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.5.0") // Для работы с таблицами (БД)
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.0")    // Для авторизации (если нужно)
+
+// Ktor Client (движок, на котором работает Supabase SDK)
+    implementation("io.ktor:ktor-client-android:2.3.12")
+
+// Сериализация (для перевода вашего data class User в JSON)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
 }
 

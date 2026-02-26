@@ -6,5 +6,6 @@ data class Place(
     val adress: String,
     val docs: String,
     val type: String,
-    val invalidnost: String
+    val invalidnost: String,
+    val photos: List<String>
 )

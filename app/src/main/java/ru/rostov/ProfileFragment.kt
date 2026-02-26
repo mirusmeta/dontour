@@ -19,8 +19,11 @@ import com.squareup.picasso.Picasso
 import com.vk.id.VKID
 import com.vk.id.logout.VKIDLogoutCallback
 import com.vk.id.logout.VKIDLogoutFail
-import com.vk.id.logout.VKIDLogoutParams
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
+import ru.rostov.database.SupaBaseConfig
 
 class ProfileFragment : Fragment() {
 
@@ -28,6 +31,8 @@ class ProfileFragment : Fragment() {
     private lateinit var names: TextView
     private lateinit var logout: ConstraintLayout
 
+    var name = ""
+    var id = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +51,11 @@ class ProfileFragment : Fragment() {
 
         loadInvalidGroup()
         loadVkAvatar()
+
         names.text = VKID.instance.accessToken!!.userData.firstName + " " + VKID.instance.accessToken!!.userData.lastName
+        name = VKID.instance.accessToken!!.userData.firstName + " " + VKID.instance.accessToken!!.userData.lastName
+        id = VKID.instance.accessToken!!.userID.toString()
+
         logout.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 logoutVk()
@@ -68,23 +77,44 @@ class ProfileFragment : Fragment() {
         }
     }
     private fun showInvalidGroupDialog() {
-
-        val options = arrayOf("1", "2", "3")
+        val options = arrayOf("Нет", "1", "2", "3")
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Группа инвалидности")
             .setItems(options) { _, which ->
-
                 val selected = options[which]
+                view?.findViewById<TextView>(R.id.levelText)?.text = selected
 
-                view?.findViewById<TextView>(R.id.levelText)?.setText(selected)
-
-                val prefs = requireContext()
-                    .getSharedPreferences("data", Context.MODE_PRIVATE)
-
-                prefs.edit()
+                requireContext().getSharedPreferences("data", Context.MODE_PRIVATE)
+                    .edit()
                     .putString("invalid_group", selected)
                     .apply()
+
+                val userUpdate = User(
+                    id = id,
+                    name = name,
+                    invalid = selected
+                )
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        android.util.Log.d("SupabaseLog", "Попытка отправки: $userUpdate")
+
+                        val supabase = createSupabaseClient(
+                            supabaseUrl = SupaBaseConfig.supabaseUrl.supabaseUrl,
+                            supabaseKey = SupaBaseConfig.supabaseKey.supabaseKey
+                        ) {
+                            install(Postgrest)
+                        }
+
+                        supabase.from("users").upsert(userUpdate)
+
+                        android.util.Log.d("SupabaseLog", "Данные успешно обновлены в БД")
+                    } catch (e: Exception) {
+                        android.util.Log.e("SupabaseLog", "Ошибка при отправке: ${e.message}")
+                        e.printStackTrace()
+                    }
+                }
             }
             .show()
     }
