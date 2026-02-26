@@ -49,41 +49,41 @@ import kotlin.collections.isNotEmpty
 import androidx.core.graphics.toColorInt
 import com.yandex.mapkit.map.CameraUpdateReason
 import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.MapType
 import com.yandex.mapkit.transport.masstransit.FitnessOptions
 import com.yandex.runtime.Error
 import com.yandex.runtime.image.ImageProvider
 
-@Suppress("DEPRECATION")
-class MapFragment : Fragment(), CameraListener, DrivingSession.DrivingRouteListener {
+class MapFragment : Fragment() {
 
+    private lateinit var mapView: MapView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        MapKitFactory.initialize(requireContext())
-        TransportFactory.getInstance()
         val view = inflater.inflate(R.layout.fragment_map, container, false)
+        mapView = view.findViewById(R.id.mapview)
+        mapView.map.mapType = MapType.VECTOR_MAP
+        mapView.map.isNightModeEnabled = true
+
+        mapView.map.move(
+            CameraPosition(Point(47.2357, 39.7015), 12f, 0f, 0f)
+        )
 
         return view
     }
 
-
-    override fun onCameraPositionChanged(
-        p0: Map,
-        p1: CameraPosition,
-        p2: CameraUpdateReason,
-        p3: Boolean
-    ) {
-        TODO("Not yet implemented")
+    override fun onStart() {
+        super.onStart()
+        MapKitFactory.getInstance().onStart()
+        mapView.onStart()
     }
 
-    override fun onDrivingRoutes(p0: List<DrivingRoute?>) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onDrivingRoutesError(p0: Error) {
-        TODO("Not yet implemented")
+    override fun onStop() {
+        mapView.onStop()
+        MapKitFactory.getInstance().onStop()
+        super.onStop()
     }
 }

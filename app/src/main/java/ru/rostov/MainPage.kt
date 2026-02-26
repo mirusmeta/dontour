@@ -23,6 +23,7 @@ import androidx.dynamicanimation.animation.SpringForce
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
+import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.map.MapObjectCollection
 
 class MainPage : AppCompatActivity() {
@@ -56,6 +57,7 @@ class MainPage : AppCompatActivity() {
 
         // стартовый экран
         selectTab(0, icons)
+        MapKitFactory.initialize(this)
 
         // анимация нажатия
         val holdListener = View.OnTouchListener { v, event ->
