@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.vk.id.VKID
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
         if (!VKIDHelper.isInitialized) {
             VKID.init(this@MainActivity)
             VKIDHelper.isInitialized = true
@@ -30,13 +33,12 @@ class MainActivity : AppCompatActivity() {
         if (canGo){
             startActivity(Intent(this@MainActivity, MainPage::class.java))
         }
-        setupEdgeToEdge()
         next()
     }
 
     private fun next() {
         val buttonNext = findViewById<LinearLayout>(R.id.linearLayout2)
-        val root = findViewById<View>(R.id.main)
+        val root = findViewById<ConstraintLayout>(R.id.main)
         buttonNext.setOnClickListener {
             val vkidOneTapBottomSheet =
                 findViewById<OneTapBottomSheet>(R.id.vkid_bottom_sheet)
@@ -58,24 +60,6 @@ class MainActivity : AppCompatActivity() {
                 })
 
             vkidOneTapBottomSheet.show()
-        }
-    }
-
-    private fun setupEdgeToEdge() {
-        val mainLayout = findViewById<View>(R.id.main)
-        ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-
-            val bottomPadding = ime.bottom.coerceAtLeast(systemBars.bottom)
-
-            v.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                bottomPadding
-            )
-            insets
         }
     }
 }

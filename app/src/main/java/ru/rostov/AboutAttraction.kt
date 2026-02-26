@@ -20,7 +20,7 @@ class AboutAttraction : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_about_attraction)
 
-        val bBack: ConstraintLayout = findViewById(R.id.b_back)
+        /*val bBack: ConstraintLayout = findViewById(R.id.b_back)
         val titleTv: TextView = findViewById(R.id.textView6)
         val descTv: TextView = findViewById(R.id.descriptionText)
         val imageView: ImageView = findViewById(R.id.imageView4)
@@ -62,7 +62,7 @@ class AboutAttraction : AppCompatActivity() {
         }
 
         setupEdgeToEdge()
-        animateAboutScreen()
+        animateAboutScreen()*/
     }
 
     private fun setupEdgeToEdge() {
@@ -76,7 +76,7 @@ class AboutAttraction : AppCompatActivity() {
         }
     }
 
-    private fun animateAboutScreen() {
+    /*private fun animateAboutScreen() {
         val titleTv = findViewById<TextView>(R.id.textView6)
         val descTv = findViewById<TextView>(R.id.descriptionText)
         val imageView = findViewById<ImageView>(R.id.imageView4)
@@ -133,5 +133,5 @@ class AboutAttraction : AppCompatActivity() {
                 .setInterpolator(android.view.animation.OvershootInterpolator(1.3f))
                 .start()
         }, 1000)
-    }
+    }*/
 }

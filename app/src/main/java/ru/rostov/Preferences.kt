@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import com.vk.id.VKID
 
 class Preferences : AppCompatActivity() {
@@ -20,176 +18,12 @@ class Preferences : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_preferences)
         myVKID = VKID.instance.accessToken?.idToken.toString()
-        animateViews()
-        setupClickAnimations()
-        setupEdgeToEdge()
     }
 
-    private fun animateViews() {
-        val question = findViewById<TextView>(R.id.questinon)
-        val parksContainer = findViewById<View>(R.id.parks_container)
-        val memorialContainer = findViewById<View>(R.id.memorial_container)
-        val eventsContainer = findViewById<View>(R.id.events_container)
-        val allContainer = findViewById<View>(R.id.all_container)
-        val buttonNext = findViewById<View>(R.id.button_next)
-
-        val allViews = listOf(
-            question,
-            parksContainer,
-            memorialContainer,
-            eventsContainer,
-            allContainer,
-            buttonNext
-        )
-
-        allViews.forEach {
-            it.alpha = 0f
-            it.translationY = 80f
-        }
-
-        allViews.forEachIndexed { index, view ->
-            view.postDelayed({
-                view.animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(600)
-                    .setInterpolator(
-                        if (index == allViews.lastIndex)
-                            OvershootInterpolator(1.3f)
-                        else
-                            DecelerateInterpolator()
-                    )
-                    .start()
-            }, (index * 150 + 200).toLong())
-        }
-
-        buttonNext.postDelayed({
-            buttonNext.animate()
-                .scaleX(1.05f)
-                .scaleY(1.05f)
-                .setDuration(200)
-                .withEndAction {
-                    buttonNext.animate()
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .setDuration(200)
-                        .start()
-                }
-                .start()
-        }, 1300)
-    }
-
-    private fun setupClickAnimations() {
-        val parksContainer = findViewById<View>(R.id.parks_container)
-        val memorialContainer = findViewById<View>(R.id.memorial_container)
-        val eventsContainer = findViewById<View>(R.id.events_container)
-        val allContainer = findViewById<View>(R.id.all_container)
-        val buttonNext = findViewById<View>(R.id.button_next)
-
-        val clickableViews =
-            listOf(parksContainer, memorialContainer, eventsContainer, allContainer)
-
-        clickableViews.forEach { view ->
-            view.setOnClickListener {
-                animateClick(view)
-                selectView(view, clickableViews)
-            }
-        }
-
-        buttonNext.setOnClickListener {
-            animateClick(buttonNext)
-            var hasAIpro = false
-            val db = Firebase.firestore
-            if (selectedViewId != null) {
-                val selectedType = when (selectedViewId) {
-                    R.id.parks_container -> "Парки"
-                    R.id.memorial_container -> "Мемориалы"
-                    R.id.events_container -> "События"
-                    R.id.all_container -> "Все сразу"
-                    else -> "Неизвестно"
-                }
-                // Проверяем наличие пользователя в БД
-
-                db.collection("users").document(myVKID).get().addOnSuccessListener { doc ->
-                    if (doc.exists()) {
-                        hasAIpro = doc.getBoolean("aipro")!!
-                        // Если есть — обновляем
-                        db.collection("users").document(myVKID)
-                            .update("preferences", selectedType)
-                            .addOnSuccessListener {
-
-                            }
-                            .addOnFailureListener {
-
-                            }
-                    } else {
-                        // Если нет — создаем новый документ
-                        val userData = hashMapOf(
-                            "aipro" to false,
-                            "preferences" to selectedType,
-                            "createdAt" to System.currentTimeMillis()
-                        )
-
-                        db.collection("users").document(myVKID)
-                            .set(userData)
-                            .addOnSuccessListener {
-
-                            }
-                            .addOnFailureListener {
-
-                            }
-                    }
-                }.addOnFailureListener {
-
-                }
-
-                val sPref = getSharedPreferences("data", MODE_PRIVATE)
-                sPref.edit {
-                    putBoolean("first_meet", true)
-                    putString("typePreference", selectedType)
-                    putBoolean("hasaipro", hasAIpro)
-                }
-
-                // Переход на главную
-                val intent = Intent(this, MainPage::class.java)
-                intent.putExtra("selected_type", selectedType)
-                startActivity(intent)
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                finish()
-
-            } else {
-                // Если ничего не выбрано — трясем кнопку
-                buttonNext.animate()
-                    .translationX(10f).setDuration(50)
-                    .withEndAction {
-                        buttonNext.animate().translationX(0f).setDuration(50).start()
-                    }.start()
-            }
-        }
-
-    }
-
-    // Анимация при клике
-    private fun animateClick(view: View) {
-        view.animate()
-            .scaleX(1.07f)
-            .scaleY(1.07f)
-            .setDuration(100)
-            .withEndAction {
-                view.animate()
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .setDuration(100)
-                    .setInterpolator(OvershootInterpolator(1.3f))
-                    .start()
-            }
-            .start()
-    }
 
     // Логика выбора блока
-    private fun selectView(selectedView: View, allViews: List<View>) {
+    /*private fun selectView(selectedView: View, allViews: List<View>) {
         selectedViewId = selectedView.id
 
         allViews.forEach { view ->
@@ -223,6 +57,6 @@ class Preferences : AppCompatActivity() {
             )
             insets
         }
-    }
+    }*/
 
 }

@@ -5,7 +5,7 @@ data class Attraction(
     val name: String,
     val description: String,
     val wiki_link: String?,
-    val coordinates: Coordinates?,
+    val coordinates: String?,
     val pic: String?,
     val level: Int?
 )

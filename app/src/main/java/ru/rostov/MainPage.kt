@@ -24,225 +24,76 @@ import androidx.fragment.app.Fragment
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import com.yandex.mapkit.map.MapObjectCollection
-import ru.rostov.AI.ChatWithGPT
 
 class MainPage : AppCompatActivity() {
-    private var landmarksLayer: MapObjectCollection? = null
 
-    @SuppressLint("ClickableViewAccessibility")
+    private lateinit var homeIcon: ImageView
+    private lateinit var mapIcon: ImageView
+    private lateinit var menuIcon: ImageView
+    private lateinit var profileIcon: ImageView
+
+    private val fragments = listOf(
+        HomeFragment(),
+        MapFragment(),
+        MenuFragment(),
+        ProfileFragment()
+    )
+
+    private var selectedIndex = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
 
-        val chosenGlass = findViewById<View>(R.id.chosen_glass)
-        val homeIcon = findViewById<ImageView>(R.id.home_icon)
-        val mapIcon = findViewById<ImageView>(R.id.map_icon)
-        val mainBlock = findViewById<ConstraintLayout>(R.id.main_block)
-        val searchBlock = findViewById<ConstraintLayout>(R.id.search_block)
-
         setupEdgeToEdge()
 
-        searchBlock.setOnClickListener {
-            val intent = Intent(this, ChatWithGPT::class.java)
-            startActivity(intent)
-            finish()
+        homeIcon = findViewById(R.id.home_icon)
+        mapIcon = findViewById(R.id.map_icon)
+        menuIcon = findViewById(R.id.menu_icon)
+        profileIcon = findViewById(R.id.profile_icon)
+
+        val icons = listOf(homeIcon, mapIcon, menuIcon, profileIcon)
+
+        // стартовый экран
+        selectTab(0, icons)
+
+        // анимация нажатия
+        val holdListener = View.OnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN ->
+                    v.animate().scaleX(1.12f).scaleY(1.12f).setDuration(120).start()
+
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL ->
+                    v.animate().scaleX(1f).scaleY(1f)
+                        .setDuration(180)
+                        .setInterpolator(OvershootInterpolator())
+                        .start()
+            }
+            false
         }
 
-        mainBlock.clipChildren = false
-        mainBlock.clipToPadding = false
-        chosenGlass.alpha = 0.95f
-
-        replaceFragment(HomeFragment())
-
-        mainBlock.post {
-            val moveDistance = mapIcon.x - homeIcon.x
-            var selectedIndex = 0
-
-            fun animateTo(index: Int) {
-                if (index == selectedIndex) return
-                val targetX = if (index == 0) 0f else moveDistance
-
-                chosenGlass.animate()
-                    .translationX(targetX)
-                    .setDuration(350)
-                    .setInterpolator(OvershootInterpolator(1.1f))
-                    .start()
-
-                if (index == 0) {
-                    homeIcon.animate().alpha(1f).setDuration(250).start()
-                    mapIcon.animate().alpha(0.5f).setDuration(250).start()
-                    replaceFragment(HomeFragment())
-                } else {
-                    mapIcon.animate().alpha(1f).setDuration(250).start()
-                    homeIcon.animate().alpha(0.5f).setDuration(250).start()
-                    replaceFragment(MapFragment())
-                }
-
-                selectedIndex = index
-            }
-
-            val springX = SpringAnimation(chosenGlass, SpringAnimation.SCALE_X, 1f)
-            val springY = SpringAnimation(chosenGlass, SpringAnimation.SCALE_Y, 1f)
-            springX.spring = SpringForce(1f).apply {
-                dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
-                stiffness = SpringForce.STIFFNESS_LOW
-            }
-            springY.spring = SpringForce(1f).apply {
-                dampingRatio = SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY
-                stiffness = SpringForce.STIFFNESS_LOW
-            }
-
-            val holdListener = View.OnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        v.animate().scaleX(1.08f).scaleY(1.08f).setDuration(150).start()
-                    }
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        springX.start(); springY.start()
-                    }
-                }
-                false
-            }
-
-            homeIcon.setOnTouchListener(holdListener)
-            mapIcon.setOnTouchListener(holdListener)
-
-            homeIcon.setOnClickListener { animateTo(0) }
-            mapIcon.setOnClickListener { animateTo(1) }
+        icons.forEachIndexed { index, icon ->
+            icon.setOnTouchListener(holdListener)
+            icon.setOnClickListener { selectTab(index, icons) }
         }
 
-        // запрет на кнопку "назад"
         onBackPressedDispatcher.addCallback(this) { }
     }
 
-    fun showLandmarkCard(attraction: Attraction) {
-        val card = findViewById<ConstraintLayout>(R.id.landmarkInfoBlock)
-        val closeIcon = findViewById<CardView>(R.id.closeIcon)
-        val imageView = findViewById<ImageView>(R.id.imageOfLandMark)
-        val nameText = findViewById<TextView>(R.id.nameOfLandmark)
-        val buttonMore = findViewById<ConstraintLayout>(R.id.buttonModeInf)
+    private fun selectTab(index: Int, icons: List<ImageView>) {
+        if (index == selectedIndex) return
 
-        // Если карточка уже открыта → плавно обновляем контент
-        if (card.visibility == View.VISIBLE) {
-            card.animate()
-                .scaleX(0.97f).scaleY(0.97f).alpha(0.9f)
-                .setDuration(120)
-                .withEndAction {
-                    updateCardContent(attraction, imageView, nameText, buttonMore)
-                    card.animate().scaleX(1f).scaleY(1f).alpha(1f)
-                        .setDuration(220)
-                        .setInterpolator(OvershootInterpolator(1.2f))
-                        .start()
-                }
-                .start()
-            return
-        }
-
-        // --- Если карточка ещё скрыта ---
-        card.visibility = View.INVISIBLE
-        closeIcon.visibility = View.INVISIBLE
-
-        card.doOnLayout {
-            updateCardContent(attraction, imageView, nameText, buttonMore)
-
-            card.translationY = card.height.toFloat()
-            card.alpha = 0f
-            closeIcon.alpha = 0f
-
-            card.visibility = View.VISIBLE
-            closeIcon.visibility = View.VISIBLE
-
-            card.animate()
-                .translationY(0f)
-                .alpha(1f)
-                .setDuration(400)
-                .setInterpolator(OvershootInterpolator(1.2f))
-                .start()
-
-            closeIcon.animate()
-                .alpha(1f)
-                .setDuration(400)
-                .setStartDelay(200)
+        icons.forEachIndexed { i, icon ->
+            icon.animate()
+                .alpha(if (i == index) 1f else 0.4f)
+                .setDuration(180)
                 .start()
         }
 
-        closeIcon.setOnClickListener { hideLandmarkCard() }
-
-        buttonMore.setOnClickListener {
-            val intent = Intent(this, AboutAttraction::class.java).apply {
-                putExtra("name", attraction.name)
-                putExtra("desc", attraction.description)
-                putExtra("wiki", attraction.wiki_link)
-                putExtra("pic", attraction.pic)
-            }
-            startActivity(intent)
-        }
+        replaceFragment(fragments[index])
+        selectedIndex = index
     }
 
-
-
-    private fun updateCardContent(
-        attraction: Attraction,
-        imageView: ImageView,
-        nameText: TextView,
-        buttonMore: View
-    ) {
-        nameText.alpha = 0f
-        imageView.alpha = 0f
-        buttonMore.alpha = 0f
-
-        nameText.text = attraction.name
-
-        Picasso.get()
-            .load(attraction.pic)
-            .placeholder(R.drawable.resource_bg_selected)
-            .error(R.drawable.image_404)
-            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-            .into(imageView, object : com.squareup.picasso.Callback {
-                override fun onSuccess() {
-                    imageView.animate().alpha(1f).setDuration(250).start()
-                }
-                override fun onError(e: Exception?) {
-                    imageView.animate().alpha(1f).setDuration(250).start()
-                }
-            })
-
-        nameText.animate().alpha(1f).setDuration(250).setStartDelay(100).start()
-        buttonMore.animate().alpha(1f).setDuration(250).setStartDelay(150).start()
-    }
-
-
-    fun hideLandmarkCard() {
-        val card = findViewById<ConstraintLayout>(R.id.landmarkInfoBlock)
-        val closeIcon = findViewById<CardView>(R.id.closeIcon)
-
-        if (card.visibility != View.VISIBLE) return
-
-        card.animate()
-            .translationY(card.height.toFloat())
-            .alpha(0f)
-            .setDuration(300)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    card.visibility = View.INVISIBLE
-                    card.translationY = 0f
-                    card.alpha = 1f
-                }
-            })
-            .start()
-
-        closeIcon.animate()
-            .alpha(0f)
-            .setDuration(250)
-            .withEndAction { closeIcon.visibility = View.INVISIBLE }
-            .start()
-    }
-
-
-
-
-
-    // 🔄 мягкая замена фрагмента через fade-анимацию
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(
@@ -252,6 +103,7 @@ class MainPage : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+
     private fun setupEdgeToEdge() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -261,21 +113,13 @@ class MainPage : AppCompatActivity() {
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
 
             val bottomPadding = when {
-                ime.bottom > 0 -> ime.bottom // если клавиатура открыта
-                systemBars.bottom > 100 -> systemBars.bottom // если панель навигации большая (например, на раскладушке)
-                else -> 0 // иначе — ничего не добавляем
+                ime.bottom > 0 -> ime.bottom
+                systemBars.bottom > 100 -> systemBars.bottom
+                else -> 0
             }
 
-            v.setPadding(
-                0, // сверху ничего не добавляем — фуллскрин остаётся
-                0,
-                0,
-                bottomPadding
-            )
-
-            // возвращаем insets, чтобы они не "съедались"
+            v.setPadding(0, 0, 0, bottomPadding)
             insets
         }
     }
-
 }

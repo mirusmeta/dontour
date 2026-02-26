@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ДонTour</string>
+    <string name="app_name">Доступный Ростов</string>
     <string name="welcome_1">Добро пожаловать в</string>
     <string name="easy_plan">Легко планируй</string>
     <string name="first_text">Создавай маршруты быстро и просто,\nбез лишних настроек.</string>

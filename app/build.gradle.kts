@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.gms.google.services)
-    id("ru.ok.tracer") version "0.2.7"
 }
 
 android {
@@ -52,26 +50,10 @@ android {
     }
 }
 
-tracer {
-    create("defaultConfig") {
-        // См. в разделе _«Настройки»_
-        pluginToken = "KiMOVLtCGterOAV1iuOt9DOWlzTLJvHxF27xOxPtElq"
-        appToken = "REJvV9xFdfbxJklQmN2ePgfhcOep8dH2SgQBEm0s0bk"
-
-        uploadMapping = true
-    }
-
-    create("debug") {
-    }
-    create("demoDebug") {
-    }
-}
-
 dependencies {
     implementation("com.vk.id:onetap-xml:2.5.0")
     implementation("com.vk.id:vkid:2.5.0")
     implementation("androidx.compose.material3:material3:1.2.1")
-    implementation(libs.firebase.firestore)
     // Desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
@@ -81,7 +63,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.ai)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,23 +73,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
-    // 🔹 Tracer SDK — сбор ошибок, крэшей, профайлинг и т.д.
-    implementation("ru.ok.tracer:tracer-crash-report:0.2.7")
-// Сбор и анализ нативных крешей
-    implementation("ru.ok.tracer:tracer-crash-report-native:0.2.7")
-// Сбор и анализ хипдапмов при OOM
-    implementation("ru.ok.tracer:tracer-heap-dumps:0.2.7")
-// Анализ потребления дискового места на устройстве
-    implementation("ru.ok.tracer:tracer-disk-usage:0.2.7")
-// Семплирующий профайлер
-    implementation("ru.ok.tracer:tracer-profiler-sampling:0.2.7")
-// Систрейс
-    implementation("ru.ok.tracer:tracer-profiler-systrace:0.2.7")
-
 // WebHooks
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.apache.poi:poi-ooxml:5.2.5")
+
+
 
 }
 
