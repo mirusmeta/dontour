@@ -129,4 +129,5 @@ class MapFragment : Fragment() {
         MapKitFactory.getInstance().onStop()
         super.onStop()
     }
+
 }
