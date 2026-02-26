@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-
+/*
 class AdapterAttractions(var items: List<Attraction>) :
     RecyclerView.Adapter<AdapterAttractions.ViewHolder>() {
 
@@ -72,4 +72,4 @@ class AdapterAttractions(var items: List<Attraction>) :
             holder.picture.setImageResource(R.mipmap.ic_launcher_foreground)
         }
     }
-}
+}*/
