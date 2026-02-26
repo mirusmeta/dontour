@@ -140,3 +140,11 @@ fun reconstructPath(
     }
     return path.reversed()
 }
+
+// Пример использования Математической Модеил в коде
+
+/*
+val result = findAccessibleRoute(startNode, endNode, profile)
+println("Cost C* = ${result.cost}")
+println("Path length = ${result.path.size}")
+ */
