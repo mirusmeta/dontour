@@ -104,5 +104,11 @@ dependencies {
     implementation("ru.ok.tracer:tracer-profiler-sampling:0.2.7")
 // Систрейс
     implementation("ru.ok.tracer:tracer-profiler-systrace:0.2.7")
+
+// WebHooks
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("org.apache.poi:poi-ooxml:5.2.5")
+
 }
 
