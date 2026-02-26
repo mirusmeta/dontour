@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,6 +34,8 @@ class MainPage : AppCompatActivity() {
     private lateinit var menuIcon: ImageView
     private lateinit var profileIcon: ImageView
 
+    private lateinit var container: View
+
     private val fragments = listOf(
         HomeFragment(),
         MapFragment(),
@@ -47,6 +50,9 @@ class MainPage : AppCompatActivity() {
         setContentView(R.layout.activity_main_page)
 
         setupEdgeToEdge()
+        MapKitFactory.initialize(this)
+
+        container = findViewById(R.id.fragment_container)
 
         homeIcon = findViewById(R.id.home_icon)
         mapIcon = findViewById(R.id.map_icon)
@@ -55,9 +61,15 @@ class MainPage : AppCompatActivity() {
 
         val icons = listOf(homeIcon, mapIcon, menuIcon, profileIcon)
 
-        // стартовый экран
-        selectTab(0, icons)
-        MapKitFactory.initialize(this)
+        // создаём фрагменты 1 раз
+        if (savedInstanceState == null) {
+            initFragments()
+        }
+
+        // стартовые иконки
+        icons.forEachIndexed { i, icon ->
+            icon.alpha = if (i == selectedIndex) 1f else 0.4f
+        }
 
         // анимация нажатия
         val holdListener = View.OnTouchListener { v, event ->
@@ -82,6 +94,20 @@ class MainPage : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this) { }
     }
 
+    // создаём и прячем все кроме первого
+    private fun initFragments() {
+        val fm = supportFragmentManager
+
+        fm.beginTransaction()
+            .add(R.id.fragment_container, fragments[0], "0")
+            .add(R.id.fragment_container, fragments[1], "1").hide(fragments[1])
+            .add(R.id.fragment_container, fragments[2], "2").hide(fragments[2])
+            .add(R.id.fragment_container, fragments[3], "3").hide(fragments[3])
+            .commit()
+
+        selectedIndex = 0
+    }
+
     private fun selectTab(index: Int, icons: List<ImageView>) {
         if (index == selectedIndex) return
 
@@ -92,18 +118,47 @@ class MainPage : AppCompatActivity() {
                 .start()
         }
 
-        replaceFragment(fragments[index])
-        selectedIndex = index
+        switchTab(index)
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .setCustomAnimations(
-                R.anim.fade_in_fast,
-                R.anim.fade_out_fast
-            )
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+    // ПЛАВНОЕ ПЕРЕКЛЮЧЕНИЕ КАК В TELEGRAM
+    private fun switchTab(index: Int) {
+
+        if (index == selectedIndex) return
+
+        val fm = supportFragmentManager
+        val current = fragments[selectedIndex]
+        val next = fragments[index]
+
+        // показываем следующий под текущим
+        fm.beginTransaction()
+            .show(next)
+            .commitNow()
+
+        // начальное состояние
+        next.view?.alpha = 0f
+
+        // плавный fade нового
+        next.view?.animate()
+            ?.alpha(1f)
+            ?.setDuration(180)
+            ?.start()
+
+        // лёгкий fade текущего
+        current.view?.animate()
+            ?.alpha(0f)
+            ?.setDuration(180)
+            ?.withEndAction {
+
+                fm.beginTransaction()
+                    .hide(current)
+                    .commitNow()
+
+                current.view?.alpha = 1f
+            }
+            ?.start()
+
+        selectedIndex = index
     }
 
     private fun setupEdgeToEdge() {
