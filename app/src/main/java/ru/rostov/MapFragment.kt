@@ -297,15 +297,25 @@ class MapFragment : Fragment() {
             card2.setBackgroundResource(R.drawable.bottom_nav_back)
             card3.setBackgroundResource(R.drawable.bottom_nav_back)
 
-// сколько категорий подсветить (1..3)
-            val count = (1..3).random()
+// уровень 1..3
+            val level = (1..3).random()
 
-// список карточек
-            val cards = listOf(card1, card2, card3)
-
-// выбираем count случайных
-            cards.shuffled().take(count).forEach {
-                it.setBackgroundResource(R.drawable.bus_selected)
+            when (level) {
+                1 -> {
+                    // только 3
+                    card3.setBackgroundResource(R.drawable.bus_selected)
+                }
+                2 -> {
+                    // 2 + 3
+                    card2.setBackgroundResource(R.drawable.bus_selected)
+                    card3.setBackgroundResource(R.drawable.bus_selected)
+                }
+                3 -> {
+                    // 1 + 2 + 3
+                    card1.setBackgroundResource(R.drawable.bus_selected)
+                    card2.setBackgroundResource(R.drawable.bus_selected)
+                    card3.setBackgroundResource(R.drawable.bus_selected)
+                }
             }
 
         } catch (_: Exception) {}
