@@ -13,8 +13,12 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.yandex.mapkit.*
+import com.yandex.mapkit.geometry.Geometry
+import com.yandex.mapkit.geometry.LinearRing
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.geometry.Polygon
 import com.yandex.mapkit.map.*
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.mapkit.search.*
@@ -22,11 +26,15 @@ import com.yandex.mapkit.transport.TransportFactory
 import com.yandex.mapkit.transport.masstransit.*
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.runtime.image.ImageProvider
+import kotlinx.coroutines.launch
 import ru.rostov.AI.Edge
 import ru.rostov.AI.UserProfile
 import ru.rostov.AI.edgeCost
+import ru.rostov.LiveParser.PlacesParser
 
 class MapFragment : Fragment() {
+    private var placesCollection: MapObjectCollection? = null
+    private var problemsCollection: MapObjectCollection? = null
     private lateinit var card1: View
     private lateinit var card2: View
     private lateinit var card3: View
@@ -424,6 +432,93 @@ class MapFragment : Fragment() {
         ) enableUserLocation()
         else locationPermissionLauncher.launch(perm)
     }
+    fun setCity(city: String) {
+
+        when (city) {
+            "Ростов-на-Дону" ->
+                mapView.map.move(CameraPosition(Point(47.2357, 39.7015), 12f, 0f, 0f))
+
+            "Батайск" ->
+                mapView.map.move(CameraPosition(Point(47.1398, 39.7518), 12f, 0f, 0f))
+
+            "Азов" ->
+                mapView.map.move(CameraPosition(Point(47.1078, 39.4233), 12f, 0f, 0f))
+        }
+
+        // сброс маршрута
+        routeCollection.clear()
+        selectionCollection.clear()
+        fromPoint = null
+        toPoint = null
+        fromPlacemark = null
+        toPlacemark = null
+    }
+    fun setCategory(category: String) {
+
+        // очистка слоев
+        placesCollection?.clear()
+        problemsCollection?.clear()
+
+        if (stopsVisible) {
+            stopsVisible = false
+            stopsCollection?.clear()
+            busBtn.setBackgroundResource(R.drawable.bottom_nav_back)
+        }
+
+        when (category) {
+            "places" -> loadPlaces()
+            "transport" -> toggleStopsMode()
+            "problems" -> loadProblems()
+        }
+    }
+
+    private fun loadPlaces() {
+
+        val vm = (activity as? MainPage)?.viewModel ?: return
+        val places = vm.placesData.value ?: return
+
+        if (placesCollection == null)
+            placesCollection = mapView.map.mapObjects.addCollection()
+
+        placesCollection?.clear()
+
+        val icon = ImageProvider.fromResource(requireContext(), R.drawable.icon_map_point)
+
+        val searchArea = VisibleRegionUtils.toPolygon(mapView.map.visibleRegion)
+
+        for (place in places) {
+
+            val address = place.adress.trim()
+            if (address.isEmpty()) continue
+
+            searchManager.submit(
+                address,
+                searchArea,
+                SearchOptions(),
+                object : Session.SearchListener {
+
+                    override fun onSearchResponse(response: Response) {
+
+                        val point = response.collection.children
+                            .firstOrNull()
+                            ?.obj?.geometry?.firstOrNull()?.point
+                            ?: return
+
+                        val mark = placesCollection!!.addPlacemark(point)
+                        mark.setIcon(icon)
+                        mark.setIconStyle(
+                            IconStyle().apply {
+                                scale = 0.15f
+                                anchor = PointF(0.5f, 1f)
+                            }
+                        )
+                    }
+
+                    override fun onSearchError(error: com.yandex.runtime.Error) {}
+                }
+            )
+        }
+    }
 
     private fun enableUserLocation() {
         if (userLocationLayer == null) {
@@ -434,6 +529,80 @@ class MapFragment : Fragment() {
         userLocationLayer?.isVisible = locationEnabled
     }
 
+    private fun loadProblems() {
+
+        if (problemsCollection == null)
+            problemsCollection = mapView.map.mapObjects.addCollection()
+
+        problemsCollection?.clear()
+
+        val region = VisibleRegionUtils.toPolygon(mapView.map.visibleRegion)
+
+        val queries = listOf(
+            "подземный переход",
+            "лестница",
+            "пешеходный переход",
+            "мост",
+        )
+
+        for (q in queries) {
+
+            searchManager.submit(
+                q,
+                region,
+                SearchOptions(),
+                object : Session.SearchListener {
+
+                    override fun onSearchResponse(response: Response) {
+
+                        for (child in response.collection.children) {
+
+                            val point = child.obj?.geometry?.firstOrNull()?.point ?: continue
+                            addProblemZone(point)
+                        }
+                    }
+
+                    override fun onSearchError(error: com.yandex.runtime.Error) {}
+                }
+            )
+        }
+    }
+    private fun addProblemZone(center: Point) {
+
+        val d = 0.0006  // размер зоны (~60 м)
+
+        val polygon = Polygon(
+            LinearRing(
+                listOf(
+                    Point(center.latitude + d, center.longitude - d),
+                    Point(center.latitude + d, center.longitude + d),
+                    Point(center.latitude - d, center.longitude + d),
+                    Point(center.latitude - d, center.longitude - d)
+                )
+            ),
+            emptyList()
+        )
+
+        val obj = problemsCollection!!.addPolygon(polygon)
+        obj.fillColor = 0x44FF0000
+        obj.strokeColor = 0xFFFF0000.toInt()
+        obj.strokeWidth = 2f
+    }
+    private fun clearMapObjects() {
+        selectionCollection.clear()
+        routeCollection.clear()
+        stopsCollection?.clear()
+        placesCollection?.clear()
+        problemsCollection?.clear()
+
+        fromPlacemark = null
+        toPlacemark = null
+        routePolyline = null
+        fromPoint = null
+        toPoint = null
+
+        stopsVisible = false
+    }
     /* ================= LIFECYCLE ================= */
 
     override fun onStart() {
@@ -444,6 +613,8 @@ class MapFragment : Fragment() {
     }
 
     override fun onStop() {
+        clearMapObjects()   // ⭐ очистка карты
+
         mapView.map.removeInputListener(mapTapListener)
         mapView.onStop()
         MapKitFactory.getInstance().onStop()

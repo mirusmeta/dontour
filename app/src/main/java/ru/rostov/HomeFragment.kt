@@ -10,29 +10,48 @@ import ru.rostov.citymodule.CityItem
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-
     private lateinit var cityAdapter: CityAdapter
     private lateinit var transportBlock: View
     private lateinit var problemsBlock: View
 
-    private val typesByCity = mapOf(
-        "Ростов-на-Дону" to 1,
-        "Батайск" to 2,
-        "Азов" to 3,
-    )
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val main = activity as? MainPage ?: return
+
+        // --- баннеры ---
         val banner = view.findViewById<View>(R.id.main_banner)
+        val places = view.findViewById<View>(R.id.b_places)
+        val oteli = view.findViewById<View>(R.id.b_oteli)
         transportBlock = view.findViewById(R.id.b_transport)
         problemsBlock = view.findViewById(R.id.problems)
 
+        // главный баннер
         banner.setOnClickListener {
-            (activity as? MainPage)?.openMapTab()
+            main.openMap(null)
         }
 
-        // список городов
+        // доступные места
+        places.setOnClickListener {
+            main.openMap("places")
+        }
+
+        // где остановиться
+        oteli.setOnClickListener {
+            main.openMap(null)
+        }
+
+        // транспорт
+        transportBlock.setOnClickListener {
+            main.openMap("transport")
+        }
+
+        // проблемные зоны
+        problemsBlock.setOnClickListener {
+            main.openMap("problems")
+        }
+
+        // --- список городов ---
         val cities = mutableListOf(
             CityItem("Ростов-на-Дону", R.drawable.logo_rostov, true),
             CityItem("Батайск", R.drawable.logo_bataysk, false),
@@ -48,25 +67,37 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         )
 
         recycler.setHasFixedSize(true)
+        recycler.isNestedScrollingEnabled = false
+
+        recycler.setOnTouchListener { v, _ ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            false
+        }
 
         cityAdapter = CityAdapter(cities) { city ->
-            val type = typesByCity[city.title] ?: return@CityAdapter
-            onCitySelected(type, city.title)
+            onCitySelected(city.title)
         }
 
         recycler.adapter = cityAdapter
 
-        // стартовое состояние (если вдруг первый не Ростов)
-        val selectedCity = cities.firstOrNull { it.isSelected }?.title
-        if (selectedCity != "Ростов-на-Дону") {
-            transportBlock.visibility = View.GONE
-            problemsBlock.visibility = View.GONE
-        }
+        applyCityUi(main.currentCity)
     }
 
-    private fun onCitySelected(type: Int, title: String) {
+    private fun onCitySelected(title: String) {
+        val main = activity as? MainPage ?: return
 
-        val isRostov = title == "Ростов-на-Дону"
+        // ⭐ сохраняем город
+        main.currentCity = title
+
+        // ⭐ уведомляем карту сразу
+        main.setCity(title)
+
+        // ⭐ обновляем UI
+        applyCityUi(title)
+    }
+
+    private fun applyCityUi(city: String) {
+        val isRostov = city == "Ростов-на-Дону"
 
         if (isRostov) {
             transportBlock.fadeVisible()
@@ -75,9 +106,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             transportBlock.fadeGone()
             problemsBlock.fadeGone()
         }
-
-        // твоя логика города
-        // viewModel.setCity(type)
     }
 }
 

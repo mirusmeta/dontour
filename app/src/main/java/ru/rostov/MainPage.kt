@@ -9,25 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.yandex.mapkit.MapKitFactory
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import ru.rostov.LiveParser.Place
-import ru.rostov.LiveParser.PlacesParser
-
-class PlacesViewModel : ViewModel() {
-    val placesData = MutableLiveData<List<Place>>()
-
-    fun load(context: android.content.Context) {
-        if (placesData.value != null) return
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = PlacesParser(context).parsePlaces()
-            placesData.postValue(result)
-        }
-    }
-}
+import ru.rostov.LiveParser.PlacesViewModel
 
 class MainPage : AppCompatActivity() {
 
@@ -35,9 +17,14 @@ class MainPage : AppCompatActivity() {
     private lateinit var mapIcon: ImageView
     private lateinit var menuIcon: ImageView
     private lateinit var profileIcon: ImageView
+
     private var selectedIndex = 0
 
-    private val viewModel: PlacesViewModel by viewModels()
+    val viewModel: PlacesViewModel by viewModels()
+
+    // ⭐ состояние карты
+    var currentCity: String = "Ростов-на-Дону"
+    var currentCategory: String? = "places"   // ← FIX: категория по умолчанию
 
     private val fragments = listOf(
         HomeFragment(),
@@ -53,7 +40,7 @@ class MainPage : AppCompatActivity() {
         setupEdgeToEdge()
         MapKitFactory.initialize(this)
 
-        // Загружаем данные один раз при старте
+        // загрузка данных парсера
         viewModel.load(applicationContext)
 
         homeIcon = findViewById(R.id.home_icon)
@@ -77,19 +64,26 @@ class MainPage : AppCompatActivity() {
 
     private fun initFragments() {
         val fm = supportFragmentManager
-        val transaction = fm.beginTransaction()
+        val tr = fm.beginTransaction()
+
         fragments.forEachIndexed { i, fragment ->
-            transaction.add(R.id.fragment_container, fragment, i.toString())
-            if (i != 0) transaction.hide(fragment)
+            tr.add(R.id.fragment_container, fragment, i.toString())
+            if (i != 0) tr.hide(fragment)
         }
-        transaction.commit()
+
+        tr.commit()
     }
 
     private fun selectTab(index: Int, icons: List<ImageView>) {
         if (index == selectedIndex) return
+
         icons.forEachIndexed { i, icon ->
-            icon.animate().alpha(if (i == index) 1f else 0.4f).setDuration(180).start()
+            icon.animate()
+                .alpha(if (i == index) 1f else 0.4f)
+                .setDuration(180)
+                .start()
         }
+
         switchTab(index)
     }
 
@@ -99,6 +93,7 @@ class MainPage : AppCompatActivity() {
         val next = fragments[index]
 
         fm.beginTransaction().show(next).commitNow()
+
         next.view?.alpha = 0f
         next.view?.animate()?.alpha(1f)?.setDuration(180)?.start()
 
@@ -113,14 +108,45 @@ class MainPage : AppCompatActivity() {
     private fun setupEdgeToEdge() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val mainLayout = findViewById<android.view.View>(R.id.main)
+
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, 0, 0, systemBars.bottom)
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(0, 0, 0, bars.bottom)
             insets
         }
     }
+
+    /* ================= MAP CONTROL ================= */
+
+    private fun getMap(): MapFragment {
+        return fragments[1] as MapFragment
+    }
+
     fun openMapTab() {
         val icons = listOf(homeIcon, mapIcon, menuIcon, profileIcon)
-        selectTab(1, icons)   // 1 = MapFragment
+        selectTab(1, icons)
+
+        val map = getMap()
+
+        // применяем состояние
+        map.setCity(currentCity)
+
+        // ⭐ всегда есть категория
+        map.setCategory(currentCategory ?: "places")
+    }
+
+    fun openMap(category: String? = null) {
+        currentCategory = category ?: "places"
+        openMapTab()
+    }
+
+    fun openMapWithCategory(category: String) {
+        currentCategory = category
+        openMapTab()
+    }
+
+    fun setCity(city: String) {
+        currentCity = city
+        getMap().setCity(city)
     }
 }

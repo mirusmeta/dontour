@@ -7,11 +7,6 @@
     android:background="@drawable/main_back"
     android:fillViewport="true"
     tools:context=".HomeFragment">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -37,6 +32,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.cardview.widget.CardView
+                    android:layout_marginBottom="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="46dp"
                     android:layout_marginStart="5dp"
@@ -157,6 +153,9 @@
                     tools:listitem="@layout/city_item" />
 
                 <androidx.cardview.widget.CardView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/b_places"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -220,6 +219,9 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/b_oteli"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -281,6 +283,9 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/b_transport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -344,6 +349,9 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/problems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -421,5 +429,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
 </androidx.core.widget.NestedScrollView>
