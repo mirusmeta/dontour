@@ -27,6 +27,9 @@ import ru.rostov.AI.UserProfile
 import ru.rostov.AI.edgeCost
 
 class MapFragment : Fragment() {
+    private lateinit var card1: View
+    private lateinit var card2: View
+    private lateinit var card3: View
 
     private lateinit var mapView: MapView
     private lateinit var searchManager: SearchManager
@@ -98,6 +101,10 @@ class MapFragment : Fragment() {
     ): View {
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
+
+        card1 = view.findViewById(R.id.card_access_1)
+        card2 = view.findViewById(R.id.card_access_2)
+        card3 = view.findViewById(R.id.card_access_3)
 
         mapView = view.findViewById(R.id.mapview)
         busBtn = view.findViewById(R.id.bus_con)
@@ -286,9 +293,24 @@ class MapFragment : Fragment() {
                 "AI_ROUTE",
                 "segments=${edges.size} blocked=$blocked avgCost=$avg"
             )
+            card1.setBackgroundResource(R.drawable.bottom_nav_back)
+            card2.setBackgroundResource(R.drawable.bottom_nav_back)
+            card3.setBackgroundResource(R.drawable.bottom_nav_back)
+
+// сколько категорий подсветить (1..3)
+            val count = (1..3).random()
+
+// список карточек
+            val cards = listOf(card1, card2, card3)
+
+// выбираем count случайных
+            cards.shuffled().take(count).forEach {
+                it.setBackgroundResource(R.drawable.bus_selected)
+            }
 
         } catch (_: Exception) {}
     }
+
 
     private fun convertRouteToEdges(route: Route): List<Edge> {
         val pts = route.geometry.points
