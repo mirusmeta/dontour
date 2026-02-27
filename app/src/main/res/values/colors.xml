@@ -10,6 +10,7 @@
     <color name="back_selected">#4DFFFFFF</color>
 
     <color name="bottom_nav_color">#B2000000</color>
+    <color name="bottom_nav_color_selected">#CC353535</color>
 
     <color name="main">#4DA6FF</color>
 </resources>

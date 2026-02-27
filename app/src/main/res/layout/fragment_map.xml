@@ -405,6 +405,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bus_con"
         android:layout_width="50dp"
         android:layout_height="60dp"
         android:background="@drawable/bottom_nav_back"
@@ -425,6 +426,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/location_con"
         android:layout_width="50dp"
         android:layout_height="60dp"
         android:background="@drawable/bottom_nav_back"
