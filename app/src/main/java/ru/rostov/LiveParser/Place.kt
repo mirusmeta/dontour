@@ -18,6 +18,8 @@ data class Place(
 )
 
 class PlacesViewModel : ViewModel() {
+    val openAddress = MutableLiveData<String?>()
+
 
     val selectedCity = MutableLiveData<String>()
 

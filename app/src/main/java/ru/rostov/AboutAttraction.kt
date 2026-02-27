@@ -1,5 +1,6 @@
 package ru.rostov
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
@@ -41,6 +42,7 @@ class AboutAttraction : AppCompatActivity() {
         val imageMain = findViewById<ImageView>(R.id.picture)
         val btnAddPhoto = findViewById<ConstraintLayout>(R.id.add_photo_btn)
         val btnBack = findViewById<ImageView>(R.id.b_back)
+        val goToMap = findViewById<TextView>(R.id.goToMap)
 
         titleTv.text = placeName
         if (!photoUrl.isNullOrEmpty()) {
@@ -49,6 +51,15 @@ class AboutAttraction : AppCompatActivity() {
 
         btnBack.setOnClickListener { finish() }
         btnAddPhoto.setOnClickListener { pickImage.launch("image/*") }
+        goToMap.setOnClickListener {
+
+            val intent = Intent(this, MainPage::class.java).apply {
+                putExtra("open_map", true)
+                putExtra("map_address", placeName) // лучше адрес
+            }
+
+            startActivity(intent)
+        }
     }
 
     private fun uploadImageToSupabase(uri: Uri) {

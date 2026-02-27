@@ -51,7 +51,21 @@ class MainPage : AppCompatActivity() {
         val icons = listOf(homeIcon, mapIcon, menuIcon, profileIcon)
 
         if (savedInstanceState == null) {
+
             initFragments()
+
+            if (intent.getBooleanExtra("open_map", false)) {
+
+                val address = intent.getStringExtra("map_address")
+
+                // открываем карту ПОСЛЕ старта Activity
+                window.decorView.post {
+
+                    openMapTab()
+                    viewModel.openAddress.value = address
+
+                }
+            }
         }
 
         icons.forEachIndexed { i, icon ->

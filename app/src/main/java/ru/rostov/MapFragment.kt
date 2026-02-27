@@ -37,6 +37,7 @@ class MapFragment : Fragment() {
     private var problemsCollection: MapObjectCollection? = null
     private lateinit var card1: View
     private lateinit var card2: View
+    private var addressCollection: MapObjectCollection? = null
     private lateinit var card3: View
 
     private lateinit var mapView: MapView
@@ -52,6 +53,8 @@ class MapFragment : Fragment() {
     private lateinit var selectTitle: TextView
 
     private var selectingMode: Mode? = null
+    private var pendingCity: String? = null
+    private var isMapReady = false
     private var tempPoint: Point? = null
     private var fromPoint: Point? = null
     private var toPoint: Point? = null
@@ -141,7 +144,20 @@ class MapFragment : Fragment() {
         fromField.setOnClickListener { startSelecting(Mode.FROM) }
         toField.setOnClickListener { startSelecting(Mode.TO) }
         selectBtn.setOnClickListener { confirmSelection() }
+        isMapReady = true
 
+        pendingCity?.let {
+            setCity(it)
+            pendingCity = null
+        }
+
+        (activity as? MainPage)?.viewModel?.openAddress
+            ?.observe(viewLifecycleOwner) { address ->
+
+                if (address.isNullOrEmpty()) return@observe
+
+                searchAndMoveToAddress(address)
+            }
         return view
     }
 
@@ -434,6 +450,11 @@ class MapFragment : Fragment() {
     }
     fun setCity(city: String) {
 
+        if (!isMapReady) {
+            pendingCity = city
+            return
+        }
+
         when (city) {
             "Ростов-на-Дону" ->
                 mapView.map.move(CameraPosition(Point(47.2357, 39.7015), 12f, 0f, 0f))
@@ -444,14 +465,6 @@ class MapFragment : Fragment() {
             "Азов" ->
                 mapView.map.move(CameraPosition(Point(47.1078, 39.4233), 12f, 0f, 0f))
         }
-
-        // сброс маршрута
-        routeCollection.clear()
-        selectionCollection.clear()
-        fromPoint = null
-        toPoint = null
-        fromPlacemark = null
-        toPlacemark = null
     }
     fun setCategory(category: String) {
 
@@ -519,7 +532,53 @@ class MapFragment : Fragment() {
             )
         }
     }
+    private fun searchAndMoveToAddress(address: String) {
 
+        searchManager.submit(
+            address,
+            Geometry.fromPoint(Point(47.2357, 39.7015)),
+            SearchOptions(),
+            object : Session.SearchListener {
+
+                override fun onSearchResponse(response: Response) {
+
+                    val point = response.collection.children
+                        .firstOrNull()
+                        ?.obj?.geometry?.firstOrNull()?.point
+                        ?: return
+
+                    // перемещение камеры
+                    mapView.map.move(
+                        CameraPosition(point, 17f, 0f, 0f),
+                        Animation(Animation.Type.SMOOTH, 0.6f),
+                        null
+                    )
+
+                    // создаём отдельный слой маркера адреса
+                    if (addressCollection == null)
+                        addressCollection = mapView.map.mapObjects.addCollection()
+
+                    addressCollection?.clear()
+
+                    val icon = ImageProvider.fromResource(
+                        requireContext(),
+                        R.drawable.icon_map_point
+                    )
+
+                    val mark = addressCollection!!.addPlacemark(point)
+                    mark.setIcon(icon)
+                    mark.setIconStyle(
+                        IconStyle().apply {
+                            scale = 0.22f   // чуть больше обычных
+                            anchor = PointF(0.5f, 1f)
+                        }
+                    )
+                }
+
+                override fun onSearchError(error: com.yandex.runtime.Error) {}
+            }
+        )
+    }
     private fun enableUserLocation() {
         if (userLocationLayer == null) {
             userLocationLayer =
