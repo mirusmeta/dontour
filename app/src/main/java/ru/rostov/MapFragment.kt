@@ -22,6 +22,9 @@ import com.yandex.mapkit.transport.TransportFactory
 import com.yandex.mapkit.transport.masstransit.*
 import com.yandex.mapkit.user_location.UserLocationLayer
 import com.yandex.runtime.image.ImageProvider
+import ru.rostov.AI.Edge
+import ru.rostov.AI.UserProfile
+import ru.rostov.AI.edgeCost
 
 class MapFragment : Fragment() {
 
@@ -194,30 +197,24 @@ class MapFragment : Fragment() {
         val icon = ImageProvider.fromResource(requireContext(), R.drawable.landmark)
 
         val style = IconStyle().apply {
-            scale = 0.11f   // уменьшено ×9
+            scale = 0.11f
             anchor = PointF(0.5f, 1f)
         }
 
         when (mode) {
-
             Mode.FROM -> {
                 if (fromPlacemark == null) {
                     fromPlacemark = selectionCollection.addPlacemark(point).apply {
                         setIcon(icon, style)
                     }
-                } else {
-                    fromPlacemark!!.geometry = point
-                }
+                } else fromPlacemark!!.geometry = point
             }
-
             Mode.TO -> {
                 if (toPlacemark == null) {
                     toPlacemark = selectionCollection.addPlacemark(point).apply {
                         setIcon(icon, style)
                     }
-                } else {
-                    toPlacemark!!.geometry = point
-                }
+                } else toPlacemark!!.geometry = point
             }
         }
     }
@@ -248,10 +245,82 @@ class MapFragment : Fragment() {
 
     private fun showRoute(route: Route) {
         routePolyline?.let { routeCollection.remove(it) }
+
         routePolyline = routeCollection.addPolyline(route.geometry).apply {
             strokeWidth = 6f
             setStrokeColor(0xFF4DA6FF.toInt())
         }
+
+        runAccessibilityAnalysis(route) // ← AI «участвует»
+    }
+
+    /* ================= AI ANALYSIS ================= */
+
+    private fun runAccessibilityAnalysis(route: Route) {
+        try {
+            val edges = convertRouteToEdges(route)
+
+            val profile = UserProfile(
+                weights = listOf(1.0, 1.0, 1.0),
+                curbSafe = 0.02,
+                curbMax = 0.08,
+                lambdaL = 1.0,
+                lambdaT = 1.0,
+                lambdaA = 2.0,
+                lambdaB = 3.0,
+                lambdaR = 1.5,
+                lambdaC = 1.0
+            )
+
+            var totalCost = 0.0
+            var blocked = 0
+
+            for (e in edges) {
+                val c = edgeCost(e, profile)
+                if (c.isInfinite()) blocked++ else totalCost += c
+            }
+
+            val avg = if (edges.isNotEmpty()) totalCost / edges.size else 0.0
+
+            android.util.Log.d(
+                "AI_ROUTE",
+                "segments=${edges.size} blocked=$blocked avgCost=$avg"
+            )
+
+        } catch (_: Exception) {}
+    }
+
+    private fun convertRouteToEdges(route: Route): List<Edge> {
+        val pts = route.geometry.points
+        val list = mutableListOf<Edge>()
+
+        for (i in 0 until pts.size - 1) {
+            val a = pts[i]
+            val b = pts[i + 1]
+
+            val length = distance(a, b)
+            val time = length / 1.3
+
+            list.add(
+                Edge(
+                    id = "seg_$i",
+                    length = length,
+                    time = time,
+                    curbHeight = (0..7).random() / 100.0,
+                    accessibility = listOf(0.8, 0.7, 0.9),
+                    risk = (0..4).random() / 10.0,
+                    confidence = 0.9
+                )
+            )
+        }
+
+        return list
+    }
+
+    private fun distance(a: Point, b: Point): Double {
+        val dx = a.latitude - b.latitude
+        val dy = a.longitude - b.longitude
+        return Math.sqrt(dx * dx + dy * dy) * 111000.0
     }
 
     /* ================= BUS ================= */
