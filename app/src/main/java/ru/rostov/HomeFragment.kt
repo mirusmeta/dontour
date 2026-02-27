@@ -10,6 +10,7 @@ import ru.rostov.citymodule.CityItem
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
+
     private lateinit var cityAdapter: CityAdapter
     private lateinit var transportBlock: View
     private lateinit var problemsBlock: View
