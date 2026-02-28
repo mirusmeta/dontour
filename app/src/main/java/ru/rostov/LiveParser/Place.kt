@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Place(
     val id: String,
     val name: String,
@@ -14,7 +16,9 @@ data class Place(
     val docs: String,
     val type: String,
     val invalidnost: String,
-    val photos: List<String>
+    val rating: Int = 0,
+    @Transient
+    val photos: List<String> = emptyList()
 )
 
 class PlacesViewModel : ViewModel() {

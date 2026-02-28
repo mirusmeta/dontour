@@ -16,18 +16,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.ДонTour">
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".AboutAttraction"
-            android:exported="false" />
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".MainPage"
-            android:exported="false" />
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".MainActivity"
+
+        <service
+            android:name=".MyPushService"
             android:exported="true">
+            <intent-filter>
+                <action android:name="ru.rustore.sdk.pushclient.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="ru.rustore.sdk.pushclient.default_notification_icon"
+            android:resource="@mipmap/ic_launcher_round" />
+
+        <meta-data
+            android:name="com.edna.push.rustore.app_id"
+            android:value="YItQMl6LwpxGTsKDAtL0JGP0wAfnvUNC" />
+
+        <activity
+            android:name=".AboutAttraction"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainPage"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

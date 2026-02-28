@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="Загрузка..."
                 android:scaleType="centerCrop"
-                android:src="@drawable/logo_rostov"
+                android:src="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

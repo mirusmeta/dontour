@@ -24,12 +24,10 @@ class AttractionsAdapter(private var items: List<Place>) :
         return ViewHolder(view)
     }
 
-    // В AttractionsAdapter.kt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.title.text = item.name
 
-        // Загрузка фото (берем первое из списка)
         if (item.photos.isNotEmpty()) {
             Picasso.get().load(item.photos[0]).placeholder(R.drawable.logo_rostov).into(holder.image)
         }
@@ -38,6 +36,7 @@ class AttractionsAdapter(private var items: List<Place>) :
             val intent = Intent(holder.itemView.context, AboutAttraction::class.java).apply {
                 putExtra("place_name", item.name)
                 putExtra("place_photo", if (item.photos.isNotEmpty()) item.photos[0] else "")
+                putExtra("place_id", item.id)
             }
             holder.itemView.context.startActivity(intent)
         }
@@ -46,7 +45,14 @@ class AttractionsAdapter(private var items: List<Place>) :
     override fun getItemCount() = items.size
 
     fun updateData(newItems: List<Place>) {
-        items = newItems
+        this.items = newItems
         notifyDataSetChanged()
+    }
+
+    fun removeFirstItem() {
+        if (items.isNotEmpty()) {
+            items = items.drop(1)
+            notifyItemRemoved(0)
+        }
     }
 }

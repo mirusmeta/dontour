@@ -24,6 +24,10 @@ dependencyResolutionManagement {
         maven {
             url = URI("https://artifactory-external.vkpartner.ru/artifactory/vk-id-captcha/android/")
         }
+        maven {
+            url = uri("https://artifactory-external.vkpartner.ru/artifactory/maven")
+
+        }
     }
 }
 

@@ -1,6 +1,8 @@
 package ru.rostov
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,11 +11,16 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.vk.id.VKID
 import com.vk.id.onetap.xml.OneTapBottomSheet
+import ru.rustore.sdk.pushclient.RuStorePushClient
+import ru.rustore.sdk.pushclient.common.logger.DefaultLogger
+import java.util.jar.Manifest
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             VKID.init(this@MainActivity)
             VKIDHelper.isInitialized = true
         }
+
         var sPref = getSharedPreferences("data", MODE_PRIVATE)
         val canGo = sPref.getBoolean("first_meet", false)
         if (canGo){
@@ -36,7 +44,29 @@ class MainActivity : AppCompatActivity() {
             setupEdgeToEdge()
             next()
         }
-
+        askNotificationPermission()
+        RuStorePushClient.checkPushAvailability()
+            .addOnSuccessListener { result ->
+                Log.d("RuStorePush", "Пуши доступны: $result")
+            }
+            .addOnFailureListener { e ->
+                Log.e("RuStorePush", "Пуши НЕ доступны: ${e.message}")
+            }
+        // В onCreate
+        RuStorePushClient.subscribeToTopic("all_users")
+            .addOnSuccessListener {
+                Log.d("RuStorePush", "Подписка на 'all_users' оформлена!")
+            }
+            .addOnFailureListener { e ->
+                Log.e("RuStorePush", "Ошибка подписки: ${e.message}")
+            }
+        RuStorePushClient.getToken()
+            .addOnSuccessListener { token ->
+                Log.d("RUSTORE_TOKEN", "Мой токен: $token")
+            }
+            .addOnFailureListener { e ->
+                Log.e("RUSTORE_TOKEN", "Ошибка получения токена: ${e.message}")
+            }
     }
 
     private fun next() {
@@ -84,6 +114,15 @@ class MainActivity : AppCompatActivity() {
 
             v.setPadding(0, 0, 0, bottomPadding)
             insets
+        }
+    }
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+            }
         }
     }
 }

@@ -83,7 +83,7 @@ dependencies {
 
 // Основной SDK Supabase
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.5.0") // Для работы с таблицами (БД)
-    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.0")    // Для авторизации (если нужно)
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.0")
 
 // Ktor Client (движок, на котором работает Supabase SDK)
     implementation("io.ktor:ktor-client-android:2.3.12")
@@ -91,5 +91,14 @@ dependencies {
 // Сериализация (для перевода вашего data class User в JSON)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
+    implementation("ru.rustore.sdk:pushclient:7.1.0")
 }
-
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "androidx.work") {
+                useVersion("2.8.1")
+            }
+        }
+    }
+}
